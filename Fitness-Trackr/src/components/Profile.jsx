@@ -1,66 +1,51 @@
 import { useState, useEffect } from "react";
 import { fetchMe } from "../api/users";
-import { deletePost } from "../api/helpers";
+import { deleteActivity } from "../api/helpers";
 import useAuth from "../hooks/useAuth";
 
 export default function Profile() {
   const { token } = useAuth();
-  const [posts, setPosts] = useState([]);
-  console.log(posts);
+  const [activities, setActivities] = useState([]);
+  console.log(activities);
   useEffect(() => {
-    async function getPosts() {
+    async function getActivities() {
       const dataList = await fetchMe(token);
-      setPosts(dataList.data.posts);
+      setActivities(dataList.activities);
     }
-    getPosts();
+    getActivities();
   }, [token]);
   return (
     <div>
-      <h1>My Posts</h1>
-      {posts.map((post) => {
-        const POST_ID = post._id;
+      <h1>My Activities</h1>
+      {activities.map((activity) => {
+        const ACTIVITY_ID = activity.id;
         let activated = "";
-        if (post.active === true) {
+        if (activity.active === true) {
           activated = "True";
         } else {
           activated = "False";
         }
         return (
           <div>
-            <div key={post._id}>
-              <h3>{post.title}</h3>
+            <div key={activity.id}>
+              <h3>{activity.name}</h3>
               <p>Active: {activated}</p>
-              <p>Description: {post.description}</p>
-              <p>Price: {post.price}</p>
-              <p>Created at: {post.createdAt}</p>
-              <p>Updated at: {post.updatedAt}</p>
-              <p>Location: {post.location}</p>
-              <div>
-                Messages:
-                {post.messages.map((message) => {
-                  return (
-                    <div key={message._id}>
-                      <p>From: {message.fromUser.username}</p>
-                      <p>Content: {message.content}</p>
-                    </div>
-                  );
-                })}
-              </div>
-              <button
-                className="button"
-                onClick={async () => {
-                  await deletePost(token, POST_ID);
-                  const response = await fetchMe(token);
-                  if (response.success) {
-                    setPosts(response.data.posts);
-                  } else {
-                    setError(response.error);
-                  }
-                }}
-              >
-                Delete Post
-              </button>
+              <p>Description: {activity.description}</p>
             </div>
+            <button
+              className="button"
+              onClick={async () => {
+                await deleteActivity(token, ACTIVITY_ID);
+                const response = await fetchMe(token);
+                if (response.success) {
+                  setActivities(response.activities);
+                } else {
+                  setError(response.error);
+                }
+              }}
+            >
+              Delete Post
+            </button>
           </div>
         );
       })}

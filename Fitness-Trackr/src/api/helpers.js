@@ -16,28 +16,18 @@ export const fetchActivities = async () => {
   }
 };
 
-export const createPost = async (
-  token,
-  title,
-  description,
-  price,
-  location,
-  willDeliver
-) => {
+export const createActivity = async (token, name, description) => {
   try {
-    const response = await fetch(`${baseUrl}/posts`, {
+    const response = await fetch(`${baseUrl}/activities`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        post: {
-          title,
+        activity: {
+          name,
           description,
-          price,
-          location,
-          willDeliver,
         },
       }),
     });
@@ -50,9 +40,9 @@ export const createPost = async (
   }
 };
 
-export async function updatePost(token) {
+export async function updateActivity(token) {
   try {
-    const response = await fetch(`${baseUrl}/posts/${POST_ID}`, {
+    const response = await fetch(`${baseUrl}/activities/${ACTIVITY_ID}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -60,11 +50,8 @@ export async function updatePost(token) {
       },
       body: JSON.stringify({
         post: {
-          title,
+          name,
           description,
-          price,
-          location,
-          willDeliver,
         },
       }),
     });
@@ -76,36 +63,14 @@ export async function updatePost(token) {
   }
 }
 
-export async function deletePost(token, POST_ID) {
+export async function deleteActivity(token, ACTIVITY_ID) {
   try {
-    const response = await fetch(`${baseUrl}/posts/${POST_ID}`, {
+    const response = await fetch(`${baseUrl}/activities/${ACTIVITY_ID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    });
-    const result = await response.json();
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function messagePost(content, token, postId) {
-  try {
-    const response = await fetch(`${baseUrl}/posts/${postId}/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        message: {
-          content,
-        },
-      }),
     });
     const result = await response.json();
     console.log(result);
